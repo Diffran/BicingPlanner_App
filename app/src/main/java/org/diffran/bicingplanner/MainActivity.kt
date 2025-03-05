@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
+import org.diffran.bicingplanner.ui.component.Pin
 import org.diffran.bicingplanner.ui.theme.BicingPlannerTheme
 import org.maplibre.android.MapLibre
 import org.maplibre.android.annotations.MarkerOptions
@@ -36,6 +38,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MapViewCompose() {
     Column {
+        Pin(painterResource(R.drawable.ic_quest_bicycle))
+
         AndroidView(
             factory = { context ->
                 MapView(context).apply {
