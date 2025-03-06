@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "org.diffran.bicingplanner"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -51,7 +51,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.maplibre)
 
-    implementation (libs.mapbox)
+    implementation(libs.ramani)
+    implementation(libs.androidx.runner)
+    implementation(libs.androidx.espresso.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
