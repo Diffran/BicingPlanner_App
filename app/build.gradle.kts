@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.ramani)
     implementation(libs.androidx.runner)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.material2)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

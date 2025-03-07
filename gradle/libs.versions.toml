@@ -28,6 +28,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 maplibre = { group = "org.maplibre.gl", name = "android-sdk", version = "11.8.0" }
 ramani = { group = "org.ramani-maps", name = "ramani-maplibre", version = "0.9.0"}
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+material2 = "androidx.compose.material:material:1.4.0"
 
 
 [plugins]
