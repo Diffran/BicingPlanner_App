@@ -28,12 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.diffran.bicingplanner.ui.component.Pin
 import org.diffran.bicingplanner.ui.theme.BicingPlannerTheme
-import org.maplibre.android.MapLibre
-import org.maplibre.android.annotations.Icon
-import org.maplibre.android.annotations.IconFactory
-import org.maplibre.android.annotations.Marker
-import org.maplibre.android.annotations.MarkerOptions
-import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
