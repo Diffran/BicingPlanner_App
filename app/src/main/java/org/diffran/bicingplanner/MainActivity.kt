@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
                             styleBuilder = styleBuilder,
                             cameraPosition = cameraPosition.value,
                         ) {
+
                             Symbol(
                                 center = symbolCenter.value,
                                 isDraggable = false,
