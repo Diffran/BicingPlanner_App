@@ -42,6 +42,7 @@ fun MapScreen(mapStyle : String) {
     }
 }
 
+//TODO: USE THIS
 @Composable
 fun pinStations(searchType : Int, stationPrediction : Int){
 

@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2024.04.01"
 runner = "1.6.1"
+gson = "2.8.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ maplibre = { group = "org.maplibre.gl", name = "android-sdk", version = "11.8.0"
 ramani = { group = "org.ramani-maps", name = "ramani-maplibre", version = "0.9.0"}
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 material2 = "androidx.compose.material:material:1.4.0"
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 
 [plugins]
