@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.diffran.bicingplanner.model.BicingStationData
 
+
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application.applicationContext
 
@@ -16,4 +17,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         return gson.fromJson(jsonString, type)
     }
+
 }
+
+
