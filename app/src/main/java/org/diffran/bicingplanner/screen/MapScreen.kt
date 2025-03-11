@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -20,6 +21,9 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel) {
     val bicingstatioData = viewModel.loadDataFromAssets()
     val stations = bicingstatioData.data.stations
     val styleBuilder = Style.Builder().fromUri(mapStyle)
+
+    val json = viewModel.generateJson(stations)
+    viewModel.saveJsonToFile(json,"bicing_data_bike_false.json")
     //valors camera
     val cameraPosition = rememberSaveable {
         mutableStateOf(
@@ -50,43 +54,26 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel) {
 }
 
 
-
-
-
-
-//TODO: USE THIS
 @Composable
 fun pinStations(searchType : String, stationPrediction : Int, latLng: LatLng){
 
-//    val imageId = when (searchType) {
-//        "EL" -> R.drawable.bicing_logo_electrica
-//        "MEC" -> R.drawable.bicing_logo_mecanica
-//        "DOCK" -> R.drawable.bicing_logo_docks
-//        else -> R.drawable.bicing_logo_electrica
-//    }
-    val color = when(searchType){
-        "EL" -> "Blue"
-        "MEC" -> "Red"
-        "DOCK" -> "Grey"
-        else -> "Blue"
+    val imageId = when (searchType) {
+        "EL" -> R.drawable.bicing_logo_electrica
+        "MEC" -> R.drawable.bicing_logo_mecanica
+        "DOCK" -> R.drawable.bicing_logo_docks
+        else -> R.drawable.bicing_logo_electrica
     }
+
+    key(searchType){//pot tenir mes d'una key(searchType, stationPrediction, latLng)
         CircleWithItem(
             center = latLng,
             radius =7f,
-            itemSize = 2f,
-            imageId = R.drawable.bicing_logo_mecanica,
+            itemSize = 0.05f,
+            imageId = imageId,
             isDraggable = false,
-            color = color,
+            color = "White",
             borderWidth = 7f,
-            borderColor = "LightGreen")
-
-//        Symbol(
-//            center = LatLng(41.3784, 2.1815),
-//            size = 1.0f,
-//            imageId = imageId,
-//            onClick = {/*TODO*/ }
-////        )
-//    }
-
+            borderColor = "Orange")//LigthGreen, DarkRed, Orange, yellow,
+    }
 }
 

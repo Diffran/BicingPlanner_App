@@ -1,5 +1,6 @@
 package org.diffran.bicingplanner.model
 
+
 data class BicingStationData(
     val last_updated: Long,
     val ttl: Int,

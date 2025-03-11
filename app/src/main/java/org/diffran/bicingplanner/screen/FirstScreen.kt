@@ -1,6 +1,9 @@
 package org.diffran.bicingplanner.screen
 
+import android.app.Application
+import android.content.Context
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,14 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.diffran.bicingplanner.viewModel.MainViewModel
-import org.diffran.bicingplanner.screen.FloatingSearchBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstScreen(mapStyle: String, viewModel: MainViewModel){
     var showGraphics by remember { mutableStateOf(false) }
     var searchType by remember { mutableStateOf("EL") }
-   // val viewModel: MainViewModel = remember { MainViewModel(Context.appl as Application) }
 
     Scaffold(
         bottomBar = {
@@ -57,8 +57,8 @@ fun FirstScreen(mapStyle: String, viewModel: MainViewModel){
                 onDockClick = {searchType = "DOCK"},
             )
 
-            FloatingSearchBar()
-
+            //FloatingSearchBar()
+            SearchBar()
 
             if(showGraphics){
                 //TODO: which marker??
