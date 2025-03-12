@@ -1,17 +1,12 @@
 package org.diffran.bicingplanner.viewModel
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import org.diffran.bicingplanner.model.BicingStation
+import org.diffran.bicingplanner.model.BicingState
 import org.diffran.bicingplanner.model.BicingStationData
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import kotlin.random.Random
+import org.diffran.bicingplanner.model.BicingStationState
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,87 +20,68 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return gson.fromJson(jsonString, type)
     }
 
-
-    // Funció per generar percentatges aleatoris per cada categoria (0, 1, 2, +3)
-    fun generatePercentages(): Map<String, Int> {
-        val categories = listOf("0", "1", "2", "+3")
-        val percentages = mutableMapOf<String, Int>()
-        var total = 0
-
-        // Generem percentatges aleatoris per cada categoria
-        categories.dropLast(1).forEach { category ->
-            val remainingPercentage = 100 - total
-            val randomPercentage = Random.nextInt(0, remainingPercentage + 1)
-            percentages[category] = randomPercentage
-            total += randomPercentage
-        }
-
-        // Assegurem-nos que la suma sigui exactament 100 afegint la resta al "+3"
-        percentages["+3"] = 100 - total
-
-        return percentages
-    }
-
-    // Generem el JSON
-    fun generateJson(stations: List<BicingStation>): JsonObject {
+    //TODO: aqui esta el drama
+    fun loadBicingStatesFromAssets(): List<BicingState> {
         val gson = Gson()
-        val jsonObject = JsonObject()
+        val type = object : TypeToken<BicingState>() {}.type
+        val fileNames = listOf(
+            "eBike_fake.json",
+            "bike_fake.json",
+            "docks_fake.json"
+        )
+        val combinedBicingStates = mutableListOf<BicingState>()
 
-        stations.forEach { station ->
-            val timeSlots = mutableMapOf<String, TimeSlotData>()
-
-            // Generem percentatges per cada interval de temps
-            val timeIntervals = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12","13","14","15","16","17","18","19","20","21","21","22","23","0")
-            timeIntervals.forEach {  timeInterval ->
-                timeSlots[timeInterval] = generatePercentages()
-            }
-
-            // Creem l'objecte JSON per l'estació
-            val stationJson = JsonObject().apply {
-                timeSlots.forEach { (timeInterval, timeSlotData) ->
-                    add(timeInterval, gson.toJsonTree(timeSlotData))
-                }
-            }
-
-            jsonObject.add(station.station_id.toString(), stationJson)
+        fileNames.forEach { fileName ->
+            val jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
+            val bicingStates: BicingState = gson.fromJson(jsonString, type)
+            combinedBicingStates.add(bicingStates)
         }
 
-        return jsonObject
+        return combinedBicingStates
     }
 
-    // Funció per guardar el JSON en un fitxer
-    fun saveJsonToFile( json: JsonObject, filename: String) {
-        try {
-            // Crear el fitxer a la ruta dels fitxers de l'aplicació
-            val file = File(context.filesDir, filename)
-            val fileOutputStream = FileOutputStream(file)
-
-            // Convertim el JSON a String
-            val jsonString = Gson().toJson(json)
-
-            // Escriure el contingut en el fitxer
-            fileOutputStream.write(jsonString.toByteArray())
-            fileOutputStream.close()
-
-            println("Fitxer guardat a: ${file.absolutePath}")
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    fun readTimeSlot(bicingState: BicingStationState, timeSlot: String): String {
+        val timeSlotData = bicingState.time_slots.find { it.time_slot == timeSlot }
+        return timeSlotData?.percentagesHighest ?: "0"
     }
+
 }
 
 
-data class BicingStationData(
-    val stations: List<BicingStation>
-)
+//TODO: resar per no haver de fer un json de dades mes :(
 
-data class BicingStation(
-    val station_id: Int
-)
-
-// Dades per cada interval de temps (1-2, 2-3, etc.)
-data class TimeSlotData(
-    val dock: Map<String, Int>,  // Percentatges de cada tipus de dock
-    val ebike: Map<String, Int>, // Percentatges de cada tipus de ebike
-    val bike: Map<String, Int>   // Percentatges de cada tipus de bike
-)
+//// Generar un percentatge aleatori entre 0, 1, 2 o 3
+//private fun generateRandomPercentage(): String {
+//    val percentages = listOf("0", "1", "2", "3")
+//    return percentages[Random.nextInt(percentages.size)]
+//}
+//
+//// Convertir les dades generades a JSON
+//fun convertToJson(stations: List<BicingStationState>): String {
+//    val gson = Gson()
+//    return gson.toJson(stations)
+//}
+//
+//fun saveJsonFile(stations: List<BicingStation>){
+//    val json = convertToJson(generateStationData(stations))
+//    val file = File(context.filesDir,"bicing_fake.json")
+//    file.writeText(json)
+//}
+// Genera les dades aleatòries per les estacions passades
+//fun generateStationData(stations: List<BicingStation>): List<BicingStationState> {
+//    return stations.map { station ->
+//        // Generem TimeSlots per cada estació (de 0 a 23)
+//        val timeSlots = (0..23).map { hour ->
+//            // Generem un percentatge aleatori entre 0, 1, 2 o 3
+//            val randomPercentage = generateRandomPercentage()
+//            TimeSlotData(
+//                time_slot = hour.toString(),
+//                percentagesHighest = randomPercentage
+//            )
+//        }
+//        BicingStationState(
+//            station_id = station.station_id,
+//            time_slots = timeSlots
+//        )
+//    }
+//}
