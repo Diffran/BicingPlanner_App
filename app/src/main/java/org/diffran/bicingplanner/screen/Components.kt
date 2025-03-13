@@ -20,18 +20,16 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.DrawerDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Slider
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -41,10 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.contentcapture.ContentCaptureManager.Companion.isEnabled
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -52,7 +48,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.diffran.bicingplanner.R
@@ -63,23 +58,36 @@ fun LateralButtons(modifier: Modifier, onElectricClick:() -> Unit, onMecanicClic
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        //TODO: canviar per icones electrica, mecanica i dock/anclaje
+        //TODO: BUSCAR ICONES QUE TINGUIN MES COHECIO
         FloatingActionButton(onClick = {onElectricClick()}, shape = CircleShape) {
-            Text("EL")
+            Icon(
+                painter = painterResource(id = R.drawable.bike_13786665),
+                contentDescription = "Icono de ebike",
+                modifier = Modifier.size(24.dp)
+            )
         }
         FloatingActionButton(onClick = { onMecanicClick() }, shape = CircleShape) {
-            Text("MEC")
+            Icon(
+                painter = painterResource(id = R.drawable.bicycle_15632987),
+                contentDescription = "Icono de bike",
+                modifier = Modifier.size(24.dp)
+
+            )
         }
         FloatingActionButton(onClick = { onDockClick()}, shape = CircleShape) {
-            Text("DOCK")
+            Icon(
+                painter = painterResource(id = R.drawable.anchor_8375462),
+                contentDescription = "Icono de ancla",
+                modifier = Modifier.size(24.dp)
+
+            )
         }
     }
 }
 
 @Composable
-fun ControllerButtons(){
+fun ControllerButtons(onClickSearch: (Int) -> Unit){
     var sliderPosition by remember { mutableFloatStateOf(0f) }
-    var hora by remember { mutableStateOf(0) }
     var selectedSeason by remember { mutableStateOf("Estiu") }
     var selectedDay by remember { mutableStateOf("Laboral") }
 
@@ -88,9 +96,9 @@ fun ControllerButtons(){
         verticalArrangement = Arrangement.Center
     ){
         SegmentedButtonRow(
-            onClickSeason = { selectedSeason = it },
-            onClickDay = { selectedDay = it },
-            onClickSearch = { /* Implementa la lògica de cerca si cal */ }//TODO: EL QUE FA EL BOTO DE LA LUPA
+            onClickSeason = { selectedSeason = it },//TODO: FALTA implementar
+            onClickDay = { selectedDay = it },//TODO: FALTA implementar
+            onClickSearch = { onClickSearch(sliderPosition.toInt()) }
         )
 
         Slider(
@@ -101,8 +109,7 @@ fun ControllerButtons(){
             steps = 22
         )
 
-        hora = sliderPosition.toInt()
-        Text(text = "$hora:00")
+        Text(text = "${sliderPosition.toInt()}:00")
     }
 }
 

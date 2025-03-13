@@ -9,7 +9,6 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import org.diffran.bicingplanner.R
 import org.diffran.bicingplanner.viewModel.MainViewModel
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.Style
@@ -17,14 +16,10 @@ import org.ramani.compose.CircleWithItem
 import org.ramani.compose.MapLibre
 
 @Composable
-fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel) {
-    val bicingstatioData = viewModel.loadDataFromAssets()
-    val stations = bicingstatioData.data.stations
+fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, timeRange :Int) {
+    val stations = viewModel.loadDataFromAssets().data.stations
     val styleBuilder = Style.Builder().fromUri(mapStyle)
-    //llista de objectes de la data fake
-    val bicingPercentageList = viewModel.loadBicingStatesFromAssets()
-//    val bicingProva = bicingPercentageList[0]
-
+    val bicingByTypeData = viewModel.searchForBicingType(searchType)
 
     //valors camera
     val cameraPosition = rememberSaveable {
@@ -46,28 +41,14 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel) {
                 styleBuilder = styleBuilder,
                 cameraPosition = cameraPosition.value,
             ){
-//                stations.forEach {
-//                    station ->
-//                    pinStations(searchType,"null", LatLng(station.lat, station.lon))
-//                }
+                for (i in stations.indices) {
 
+                    val station = stations[i]
+                    val percentageData = bicingByTypeData.stations.find { it.station_id == station.station_id }
+                    val stationPrediction = percentageData?.let { viewModel.readTimeSlot(it, timeRange.toString()) } ?: "8"
 
-//                for (i in stations.indices) {
-//                    val station = stations[i]
-//
-//                    // Trobar el BicingState per al station_id
-//                    val percentageData = bicingProva.stations.find { it.station_id == station.station_id }
-//
-//                    // Si es troba el BicingState per aquesta estació, llegim el valor del time_slot
-//                    val stationPrediction = if (percentageData != null) {
-//                        viewModel.readTimeSlot(percentageData, "0") // llegim el time_slot 0
-//                    } else {
-//                        "0" // Si no es troba l'estació, donem un valor per defecte
-//                    }
-//
-//                    // Finalment, cridem la funció per afegir la "pinned station"
-//                    pinStations(searchType, stationPrediction, LatLng(station.lat, station.lon))
-//                }
+                    pinStations(searchType, stationPrediction, LatLng(station.lat, station.lon))
+                }
             }
         }
     }
@@ -77,29 +58,28 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel) {
 @Composable
 fun pinStations(searchType : String, stationPrediction : String, latLng: LatLng){
 
-    val imageId = when (searchType) {
-        "EL" -> R.drawable.bicing_logo_electrica
-        "MEC" -> R.drawable.bicing_logo_mecanica
-        "DOCK" -> R.drawable.bicing_logo_docks
-        else -> R.drawable.bicing_logo_electrica
+    val imageColor = when (searchType) {
+        "EL" -> "Blue"
+        "MEC" -> "DarkRed"
+        "DOCK" -> "DarkGrey"
+        else -> "Blue"
     }
 
     val borderColor = when (stationPrediction) {
-        "0" -> "DarkRed"
+        "0" -> "Red"
         "1" -> "Orange"
         "2" -> "Yellow"
         "3" -> "LightGreen"
         else -> "White"
     }
 
-    key(searchType,stationPrediction){//pot tenir mes d'una key(searchType, stationPrediction, latLng)
+    key(searchType,stationPrediction){
         CircleWithItem(
             center = latLng,
             radius =7f,
             itemSize = 0.05f,
-            imageId = imageId,
             isDraggable = false,
-            color = "White",
+            color = imageColor,
             borderWidth = 7f,
             borderColor = borderColor)
     }

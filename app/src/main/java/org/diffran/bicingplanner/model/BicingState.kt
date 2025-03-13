@@ -1,6 +1,7 @@
 package org.diffran.bicingplanner.model
 
 data class BicingState(
+    val type: String,
     val stations: List<BicingStationState>
 )
 

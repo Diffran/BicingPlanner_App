@@ -20,7 +20,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return gson.fromJson(jsonString, type)
     }
 
-    //TODO: aqui esta el drama
     fun loadBicingStatesFromAssets(): List<BicingState> {
         val gson = Gson()
         val type = object : TypeToken<BicingState>() {}.type
@@ -45,6 +44,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return timeSlotData?.percentagesHighest ?: "0"
     }
 
+    //TODO: dades falses de moment
+    fun searchForBicingType(searchType:String): BicingState{
+        val bicingPercentageList = loadBicingStatesFromAssets()
+        return when (searchType) {
+            "EL" -> bicingPercentageList[0]
+            "MEC" -> bicingPercentageList[1]
+            "DOCK" -> bicingPercentageList[2]
+            else -> bicingPercentageList[0]
+        }
+    }
 }
 
 
