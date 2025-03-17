@@ -1,6 +1,5 @@
 package org.diffran.bicingplanner.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,9 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import org.diffran.bicingplanner.R
 
 @Composable
 fun GraphicsCard(modifier: Modifier, onExitClick: () -> Unit){//TODO: li ha d'entrar 100% el viewModel que es d'on rebrà les dades
@@ -69,9 +66,9 @@ fun GraphicsCard(modifier: Modifier, onExitClick: () -> Unit){//TODO: li ha d'en
 
 @Composable
 fun Graphic(){//TODO: haura de rebre el viewModel per agafar les ddes??
-    Image(
-        //TODO: mirar com posar gràfics...la Image es perque es vegi alguna cosa
-        painter = painterResource(R.drawable.bicing_logo_mecanica),
-        contentDescription = "Grafic"
-    )
+//    Image(
+//        //TODO: mirar com posar gràfics...la Image es perque es vegi alguna cosa
+//        painter = painterResource(R.drawable.bicing_logo_mecanica),
+//        contentDescription = "Grafic"
+//    )
 }

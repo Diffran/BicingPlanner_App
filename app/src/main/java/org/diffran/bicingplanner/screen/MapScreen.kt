@@ -1,10 +1,13 @@
 package org.diffran.bicingplanner.screen
 
+import android.graphics.Color
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,14 +15,21 @@ import androidx.compose.ui.Modifier
 import org.diffran.bicingplanner.viewModel.MainViewModel
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.Style
-import org.ramani.compose.CircleWithItem
+import org.maplibre.android.style.expressions.Expression
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.layers.SymbolLayer
 import org.ramani.compose.MapLibre
 
 @Composable
 fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, timeRange :Int) {
-    val stations = viewModel.loadDataFromAssets().data.stations
+    org.maplibre.android.MapLibre.getInstance(viewModel.context)
+
+    val unclustered =createUnclusteredLayer()
+//    val clustered = createClusterLayer()
+//    val numbered = createNumbersLayer()
     val styleBuilder = Style.Builder().fromUri(mapStyle)
-    val bicingByTypeData = viewModel.searchForBicingType(searchType)
+    val myDataSource = viewModel.loadGeoJsonFromAssets( "bicing_stations.geojson")
 
     //valors camera
     val cameraPosition = rememberSaveable {
@@ -36,54 +46,73 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ){
-            MapLibre(
-                modifier = Modifier.fillMaxSize(),
-                styleBuilder = styleBuilder,
-                cameraPosition = cameraPosition.value,
-            ){
-                for (i in stations.indices) {
-
-                    val station = stations[i]
-                    val percentageData = bicingByTypeData.stations.find { it.station_id == station.station_id }
-                    val stationPrediction = percentageData?.let { viewModel.readTimeSlot(it, timeRange.toString()) } ?: "8"
-
-                    pinStations(searchType, stationPrediction, LatLng(station.lat, station.lon))
+            LaunchedEffect(searchType) {
+                Toast.makeText(viewModel.context, "Canvia a $searchType", Toast.LENGTH_LONG).show()
+            }
+            key(searchType){
+                MapLibre(
+                    modifier = Modifier.fillMaxSize(),
+                    styleBuilder = styleBuilder,
+                    cameraPosition = cameraPosition.value,
+                    sources = listOf(viewModel.getGeoSource(myDataSource)),
+                    layers = listOf(unclustered)//afegir la layer de cluster i numbers fa que no apareguin els clusters
+                ){
                 }
             }
         }
     }
 }
 
+fun changeCircleColor(layer: CircleLayer, newColor: String) {
+    layer.setProperties(
+        PropertyFactory.circleColor(newColor)
+    )
+}
 
-@Composable
-fun pinStations(searchType : String, stationPrediction : String, latLng: LatLng){
-
-    val imageColor = when (searchType) {
-        "EL" -> "Blue"
-        "MEC" -> "DarkRed"
-        "DOCK" -> "DarkGrey"
-        else -> "Blue"
-    }
-
-    val borderColor = when (stationPrediction) {
-        "0" -> "Red"
-        "1" -> "Orange"
-        "2" -> "Yellow"
-        "3" -> "LightGreen"
-        else -> "White"
-    }
-
-    key(searchType,stationPrediction){
-        CircleWithItem(
-            center = latLng,
-            radius =7f,
-            itemSize = 0.05f,
-            isDraggable = false,
-            color = imageColor,
-            borderWidth = 7f,
-            borderColor = borderColor)
+private fun createUnclusteredLayer(): CircleLayer {
+    return CircleLayer("unclustered", "bicing_stations").apply {
+        setProperties(
+            PropertyFactory.circleRadius(7F),
+            PropertyFactory.circleColor("Blue"),
+            PropertyFactory.circleStrokeColor(
+                Expression.interpolate(
+                    Expression.exponential(1),
+                    Expression.get("color"),
+                    Expression.stop(0, "darkred"),
+                    Expression.stop(1, "orange"),
+                    Expression.stop(2, "yellow"),
+                    Expression.stop(3, "lightgreen"),
+                )
+            ),
+            PropertyFactory.circleStrokeWidth(7f),
+        )
     }
 }
+
+//private fun createClusterLayer(): CircleLayer {
+//    val pointCount = Expression.toNumber(Expression.get("point_count"))
+//    return CircleLayer("cluster", "bicing_stations").apply {
+//        setFilter(Expression.gt(pointCount, 1))
+//        setProperties(
+//            PropertyFactory.circleColor(Color.BLACK),
+//            PropertyFactory.circleRadius(14F),
+//        )
+//    }
+//}
+//
+//private fun createNumbersLayer(): SymbolLayer {
+//    val pointCount = Expression.toNumber(Expression.get("point_count"))
+//    return SymbolLayer("count", "bicing_stations").apply {
+//        setFilter(Expression.gt(pointCount, 1))
+//        setProperties(
+//            PropertyFactory.textField(Expression.toString(pointCount)),
+//            PropertyFactory.textSize(12F),
+//            PropertyFactory.textColor(Color.WHITE),
+//            PropertyFactory.textIgnorePlacement(true),
+//            PropertyFactory.textAllowOverlap(true),
+//        )
+//    }
+//}
 
 
 

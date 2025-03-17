@@ -1,5 +1,6 @@
 package org.diffran.bicingplanner.screen
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -58,23 +60,27 @@ fun LateralButtons(modifier: Modifier, onElectricClick:() -> Unit, onMecanicClic
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        //TODO: BUSCAR ICONES QUE TINGUIN MES COHECIO
-        FloatingActionButton(onClick = {onElectricClick()}, shape = CircleShape) {
+
+        FloatingActionButton(
+            onClick = {onElectricClick()},
+            shape = CircleShape,
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
             Icon(
-                painter = painterResource(id = R.drawable.bike_13786665),
+                painter = painterResource(id = R.drawable.bicicleta_electrica_icona),
                 contentDescription = "Icono de ebike",
                 modifier = Modifier.size(24.dp)
             )
         }
-        FloatingActionButton(onClick = { onMecanicClick() }, shape = CircleShape) {
+        FloatingActionButton(onClick = { onMecanicClick() }, shape = CircleShape,containerColor = MaterialTheme.colorScheme.primary) {
             Icon(
-                painter = painterResource(id = R.drawable.bicycle_15632987),
+                painter = painterResource(id = R.drawable.bicycle_3198344),
                 contentDescription = "Icono de bike",
                 modifier = Modifier.size(24.dp)
 
             )
         }
-        FloatingActionButton(onClick = { onDockClick()}, shape = CircleShape) {
+        FloatingActionButton(onClick = { onDockClick()}, shape = CircleShape,containerColor = MaterialTheme.colorScheme.primary) {
             Icon(
                 painter = painterResource(id = R.drawable.anchor_8375462),
                 contentDescription = "Icono de ancla",
@@ -120,6 +126,7 @@ fun SegmentedButtonRow(
     onClickDay : (String) -> Unit,
     onClickSearch : () -> Unit
 ) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -128,7 +135,7 @@ fun SegmentedButtonRow(
     ) {
         SingleChoiceSegmentedButton(
             onClick = { season -> onClickSeason(season) },
-            options = listOf("Estiu", "Hivern")
+            options = listOf("Estiu", "Hivern"),
         )
         Spacer(modifier = Modifier.width(2.dp))
         SingleChoiceSegmentedButton(
@@ -176,78 +183,83 @@ fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier, onClick : (String
 @Composable
 fun SearchBar() {
     var text by remember { mutableStateOf(TextFieldValue()) }
-    Row(
-        modifier = Modifier
-            .shadow(elevation = 3.dp, shape = RoundedCornerShape(16.dp))
-            .background(color = backgroundColor, shape = RoundedCornerShape(16.dp))
-            .clickable { /*TODO*/ },
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        BasicTextField(
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier =Modifier.padding(horizontal = 40.dp, vertical = 40.dp),
+
+    ){
+        Row(
             modifier = Modifier
-                .weight(8f)
-                .padding(horizontal = 12.dp),
-            value = text,
-            onValueChange = {
-                text = it
-                //onTextChange(it.text)
-            },
-            textStyle = TextStyle(
-                color = Color.Red.copy(alpha = 0.5f),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            ),
-            decorationBox = { innerTextField ->
-                if (text.text.isEmpty()) {
-                    Text(
-                        text = "número estació",
-                        //color = Color.Gray.copy(alpha = 0.5f),
-                        color = Color.Red.copy(alpha = 0.5f),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                innerTextField()
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(onSearch = { /*TODO*/ }),
-            singleLine = true
-        )
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .size(40.dp)
-                .background(color = Color.Transparent, shape = CircleShape)
-                .clickable {
-                    if (text.text.isNotEmpty()) {
-                        text = TextFieldValue(text = "")
-                        // onTextChange("")
+                .shadow(elevation = 3.dp, shape = RoundedCornerShape(16.dp))
+                .background(color = backgroundColor, shape = RoundedCornerShape(16.dp))
+                .clickable { /*TODO*/ }
+                .fillMaxWidth()
+        ) {
+            BasicTextField(
+                modifier = Modifier
+                    .weight(4f)
+                    .padding(horizontal = 8.dp),
+                value = text,
+                onValueChange = {
+                    text = it
+                },
+                textStyle = TextStyle(
+                    color = Color.Red,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                decorationBox = { innerTextField ->
+                    if (text.text.isEmpty()) {
+                        Text(
+                            text = "número estació",
+                            color = Color.Red.copy(alpha = 0.5f),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top =8.dp)
+                        )
+                    }
+                    Box(Modifier.padding(top = 10.dp)) {
+                        innerTextField()
                     }
                 },
-        ) {
-            if (text.text.isNotEmpty()) {
-                Icon(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    painter = painterResource(id = R.drawable.baseline_clear_24),
-                    contentDescription = stringResource(R.string.search),
-                    tint = Color.Red.copy(alpha = 0.5f),
-                )
-            } else {
-                Icon(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    painter = painterResource(id = R.drawable.ic_search),
-                    contentDescription = stringResource(R.string.search),
-                    tint = Color.Red.copy(alpha = 0.5f),
-                )
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(onSearch = { /*TODO*/ }),
+                singleLine = true
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .size(40.dp)
+                    .background(color = Color.Transparent, shape = CircleShape)
+                    .clickable {
+                        if (text.text.isNotEmpty()) {
+                            text = TextFieldValue(text = "")
+                        }
+                    },
+            ) {
+                if (text.text.isNotEmpty()) {
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxSize()
+                          .padding(10.dp),
+                        painter = painterResource(id = R.drawable.baseline_clear_24),
+                        contentDescription = stringResource(R.string.search),
+                        tint = Color.Red,
+                    )
+                } else {
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp),
+                        painter = painterResource(id = R.drawable.ic_search),
+                        contentDescription = stringResource(R.string.search),
+                        tint = Color.Red,
+                    )
+                }
             }
         }
     }
-
 }
