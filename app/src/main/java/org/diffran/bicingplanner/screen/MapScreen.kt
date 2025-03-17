@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import org.diffran.bicingplanner.viewModel.MainViewModel
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.Style
-import org.ramani.compose.CircleWithItem
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.PropertyFactory
+import org.ramani.compose.Circle
 import org.ramani.compose.MapLibre
 
 @Composable
@@ -40,6 +42,7 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
                 modifier = Modifier.fillMaxSize(),
                 styleBuilder = styleBuilder,
                 cameraPosition = cameraPosition.value,
+
             ){
                 for (i in stations.indices) {
 
@@ -74,10 +77,9 @@ fun pinStations(searchType : String, stationPrediction : String, latLng: LatLng)
     }
 
     key(searchType,stationPrediction){
-        CircleWithItem(
+        Circle(
             center = latLng,
             radius =7f,
-            itemSize = 0.05f,
             isDraggable = false,
             color = imageColor,
             borderWidth = 7f,
@@ -85,5 +87,10 @@ fun pinStations(searchType : String, stationPrediction : String, latLng: LatLng)
     }
 }
 
+private fun changeCircleColor(layer: CircleLayer, newColor: String) {
+    layer.setProperties(
+        PropertyFactory.circleColor(newColor)
+    )
+}
 
 

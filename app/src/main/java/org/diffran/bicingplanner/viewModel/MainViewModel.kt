@@ -1,17 +1,27 @@
 package org.diffran.bicingplanner.viewModel
 
 import android.app.Application
+import android.content.res.AssetManager
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.diffran.bicingplanner.model.BicingState
 import org.diffran.bicingplanner.model.BicingStationData
 import org.diffran.bicingplanner.model.BicingStationState
+import java.io.InputStreamReader
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application.applicationContext
 
+    private fun loadGeoJsonFromAssets(fileName: String): String {
+        val assetManager: AssetManager = context.assets
+        val inputStream = assetManager.open(fileName)
+        val reader = InputStreamReader(inputStream)
+        return reader.readText()
+    }
+
+    //aixo te pinta de que sobra... :(
     fun loadDataFromAssets(): BicingStationData {
         val jsonString = context.assets.open("bicing_stations.json").bufferedReader().use { it.readText() }
         val gson = Gson()
