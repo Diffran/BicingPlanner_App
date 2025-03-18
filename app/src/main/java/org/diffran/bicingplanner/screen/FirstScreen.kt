@@ -35,7 +35,6 @@ fun FirstScreen(mapStyle: String, viewModel: MainViewModel){
     ) {paddingValues ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues),
         ) {
 

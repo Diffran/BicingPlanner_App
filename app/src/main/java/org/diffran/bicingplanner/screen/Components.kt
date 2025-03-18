@@ -201,7 +201,6 @@ fun SearchBar() {
                 if (text.text.isEmpty()) {
                     Text(
                         text = "número estació",
-                        //color = Color.Gray.copy(alpha = 0.5f),
                         color = Color.Red.copy(alpha = 0.5f),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
