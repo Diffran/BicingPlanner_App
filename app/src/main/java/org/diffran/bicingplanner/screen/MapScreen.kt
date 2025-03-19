@@ -24,7 +24,6 @@ import org.ramani.compose.MapLibre
 
 @Composable
 fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, timeRange :Int) {
-//    var currentStrokeColor = "LightGreen"
     org.maplibre.android.MapLibre.getInstance(viewModel.context)
 
     val unclustered =createUnclusteredLayer()
@@ -57,21 +56,6 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
                 layers = listOf(unclustered,clustered,numbers)
             ){
 
-//                Button(
-//                    onClick = {
-//                        // Canviar el color del stroke entre 3 colors diferents
-//                        val currentStrokeColor = when (currentStrokeColor) {
-//                            "grey" -> "red"
-//                            "red" -> "blue"
-//                            else -> "grey"
-//                        }
-//                        //changeStrokeColor(unclustered, currentStrokeColor)
-//                        changeCircleColor(unclustered, currentStrokeColor)
-//                    },
-//                    modifier = Modifier.padding(16.dp)
-//                ) {
-//                    Text("Canviar Stroke Color")
-//                }
             }
         }
     }
@@ -88,7 +72,6 @@ private fun createUnclusteredLayer(): CircleLayer {
         setProperties(
             PropertyFactory.circleRadius(7F),
             PropertyFactory.circleColor("Blue"),
-           // PropertyFactory.circleStrokeColor("lightgreen"),
             PropertyFactory.circleStrokeColor(
                 Expression.interpolate(
                     Expression.exponential(1),
