@@ -26,12 +26,9 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
     org.maplibre.android.MapLibre.getInstance(viewModel.context)
 
     val unclustered =createUnclusteredLayer()
-//    val clustered = createClusterLayer()
-//    val numbered = createNumbersLayer()
     val styleBuilder = Style.Builder().fromUri(mapStyle)
     val myDataSource = viewModel.loadGeoJsonFromAssets( "bicing_stations.geojson")
 
-    //valors camera
     val cameraPosition = rememberSaveable {
         mutableStateOf(
             org.ramani.compose.CameraPosition(
@@ -55,7 +52,7 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
                     styleBuilder = styleBuilder,
                     cameraPosition = cameraPosition.value,
                     sources = listOf(viewModel.getGeoSource(myDataSource)),
-                    layers = listOf(unclustered)//afegir la layer de cluster i numbers fa que no apareguin els clusters
+                    layers = listOf(unclustered)
                 ){
                 }
             }
@@ -88,31 +85,6 @@ private fun createUnclusteredLayer(): CircleLayer {
         )
     }
 }
-
-//private fun createClusterLayer(): CircleLayer {
-//    val pointCount = Expression.toNumber(Expression.get("point_count"))
-//    return CircleLayer("cluster", "bicing_stations").apply {
-//        setFilter(Expression.gt(pointCount, 1))
-//        setProperties(
-//            PropertyFactory.circleColor(Color.BLACK),
-//            PropertyFactory.circleRadius(14F),
-//        )
-//    }
-//}
-//
-//private fun createNumbersLayer(): SymbolLayer {
-//    val pointCount = Expression.toNumber(Expression.get("point_count"))
-//    return SymbolLayer("count", "bicing_stations").apply {
-//        setFilter(Expression.gt(pointCount, 1))
-//        setProperties(
-//            PropertyFactory.textField(Expression.toString(pointCount)),
-//            PropertyFactory.textSize(12F),
-//            PropertyFactory.textColor(Color.WHITE),
-//            PropertyFactory.textIgnorePlacement(true),
-//            PropertyFactory.textAllowOverlap(true),
-//        )
-//    }
-//}
 
 
 
