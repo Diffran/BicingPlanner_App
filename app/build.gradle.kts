@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.material2)
     implementation(libs.gson)
+    implementation(libs.retrofit)
 
 
     testImplementation(libs.junit)

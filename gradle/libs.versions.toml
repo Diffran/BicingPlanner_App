@@ -31,6 +31,7 @@ ramani = { group = "org.ramani-maps", name = "ramani-maplibre", version = "0.9.0
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 material2 = "androidx.compose.material:material:1.4.0"
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+retrofit = 'com.squareup.retrofit2:retrofit:2.11.0'
 
 
 [plugins]
