@@ -1,8 +1,10 @@
 package org.diffran.bicingplanner.data
 
+import okhttp3.ResponseBody
 import retrofit2.http.GET
+import retrofit2.http.Header
 
 interface RetrofitService {
-    @GET("/api/bicing_geojson")
-    suspend fun getGeoJsonFromApi() : String
+    @GET("bicing_geojson")
+    suspend fun getGeoJsonFromApi() : ResponseBody
 }

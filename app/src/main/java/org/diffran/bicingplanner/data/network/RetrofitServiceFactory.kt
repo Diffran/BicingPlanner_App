@@ -1,12 +1,31 @@
 package org.diffran.bicingplanner.data.network
 
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import org.diffran.bicingplanner.data.RetrofitService
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitServiceFactory {
-    fun makeRetrofitService() : RetrofitService{
+    private const val API_KEY = "1234"
+
+    fun makeRetrofitService(): RetrofitService {
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val originalRequest = chain.request()
+
+                val authenticatedRequest = originalRequest.newBuilder()
+                    .addHeader("Authorization", "ApiKey $API_KEY")
+                    .build()
+
+                chain.proceed(authenticatedRequest)
+            }
+            .build()
+
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl("http://10.0.2.2:8080/api/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RetrofitService::class.java)
     }

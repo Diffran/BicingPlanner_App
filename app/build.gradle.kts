@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.material2)
     implementation(libs.gson)
     implementation(libs.retrofit)
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
     testImplementation(libs.junit)

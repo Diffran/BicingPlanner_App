@@ -12,6 +12,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import org.diffran.bicingplanner.viewModel.MainViewModel
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.Style
@@ -23,11 +24,13 @@ import org.ramani.compose.MapLibre
 
 @Composable
 fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, timeRange :Int) {
-    org.maplibre.android.MapLibre.getInstance(viewModel.context)
+    val context = LocalContext.current
+    org.maplibre.android.MapLibre.getInstance(context)
 
     val unclustered =createUnclusteredLayer()
     val styleBuilder = Style.Builder().fromUri(mapStyle)
-    val myDataSource = viewModel.loadGeoJsonFromAssets( "bicing_stations.geojson")
+    viewModel.getBicingPred()
+    val myDataSource = viewModel.getGeoSource(viewModel.dataBicing)
 
     val cameraPosition = rememberSaveable {
         mutableStateOf(
@@ -44,14 +47,14 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
             color = MaterialTheme.colorScheme.background
         ){
             LaunchedEffect(searchType) {
-                Toast.makeText(viewModel.context, "Canvia a $searchType", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Canvia a $searchType", Toast.LENGTH_LONG).show()
             }
             key(searchType){
                 MapLibre(
                     modifier = Modifier.fillMaxSize(),
                     styleBuilder = styleBuilder,
                     cameraPosition = cameraPosition.value,
-                    sources = listOf(viewModel.getGeoSource(myDataSource)),
+                    sources = listOf(myDataSource),
                     layers = listOf(unclustered)
                 ){
                 }
