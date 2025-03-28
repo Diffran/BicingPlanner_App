@@ -3,12 +3,16 @@ package org.diffran.bicingplanner.viewModel
 import android.app.Application
 import android.content.res.AssetManager
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.diffran.bicingplanner.data.AppRepository
 import org.maplibre.android.style.sources.GeoJsonOptions
@@ -19,7 +23,10 @@ import java.lang.Thread.State
 
 
 class MainViewModel(private val repository :AppRepository) : ViewModel() {
-    var dataBicing : String = ""
+    var dataBicing by mutableStateOf("")
+        private set
+    val errorMessage = mutableStateOf<String?>(null)
+    var serverError = false
 
     init{
         getBicingPred()
@@ -28,12 +35,15 @@ class MainViewModel(private val repository :AppRepository) : ViewModel() {
     fun getBicingPred(){
         viewModelScope.launch {
             try{
-                val responseBody = repository.getBicingPred()
+                var result :String = repository.getBicingPred()
+                dataBicing = result.replace("\n","")
+                serverError = false
 
-                dataBicing = responseBody.toString()
-                Log.d("AQUIIIIIII ->   !!!!!!! -> MainViewModel", "Esta es el dataBicing: $dataBicing")
+                Log.d("BICING API", "dataBicing correcta")
             }catch(e : IOException){
-                Log.e("API_Error", "Error al obtener los datos: ${e.message}")
+                errorMessage.value = "Error al obtener los datos: ${e.message}"
+                Log.e("BICING API", "Error al obtener los datos: ${e.message}")
+                serverError = true
             }
         }
     }

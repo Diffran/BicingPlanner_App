@@ -15,7 +15,7 @@ object RetrofitServiceFactory {
                 val originalRequest = chain.request()
 
                 val authenticatedRequest = originalRequest.newBuilder()
-                    .addHeader("Authorization", "ApiKey $API_KEY")
+                    .addHeader("Authentication", API_KEY)
                     .build()
 
                 chain.proceed(authenticatedRequest)
@@ -23,7 +23,8 @@ object RetrofitServiceFactory {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/")
+            .baseUrl("http://10.7.13.64:8080/api/")
+            //.baseUrl("http://10.0.2.2:8080/api/") nomes el emulador
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

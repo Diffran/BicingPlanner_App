@@ -93,7 +93,7 @@ fun LateralButtons(modifier: Modifier, onElectricClick:() -> Unit, onMecanicClic
 
 @Composable
 fun ControllerButtons(onClickSearch: (Int) -> Unit){
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+    var sliderPosition by remember { mutableFloatStateOf(8f) }
     var selectedSeason by remember { mutableStateOf("Estiu") }
     var selectedDay by remember { mutableStateOf("Laboral") }
 
