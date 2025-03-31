@@ -31,7 +31,7 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
     val unclustered =createUnclusteredLayer()
     val styleBuilder = Style.Builder().fromUri(mapStyle)
 
-    viewModel.getBicingPred()
+    viewModel.getBicingPred(searchType,8)
     val myDataSource = viewModel.getGeoSource(viewModel.dataBicing)
 
     val cameraPosition = rememberSaveable {

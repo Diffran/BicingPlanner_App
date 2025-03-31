@@ -29,13 +29,14 @@ class MainViewModel(private val repository :AppRepository) : ViewModel() {
     var serverError = false
 
     init{
-        getBicingPred()
+        getBicingPred("EL",8)
     }
 
-    fun getBicingPred(){
+    fun getBicingPred(type: String, hour: Int){
+        Log.d("BICINGAPI","TYPUS:$type HORA: $hour")
         viewModelScope.launch {
             try{
-                var result :String = repository.getBicingPred()
+                var result :String = repository.getBicingPred(type,hour)
                 dataBicing = result.replace("\n","")
                 serverError = false
 

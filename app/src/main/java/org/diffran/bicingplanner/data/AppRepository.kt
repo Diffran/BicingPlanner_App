@@ -1,13 +1,11 @@
 package org.diffran.bicingplanner.data
 
-import okhttp3.ResponseBody
-
 interface AppRepository{
-    suspend fun getBicingPred() : String
+    suspend fun getBicingPred(type: String, time: Int) : String
 }
 
 class AppRepositoryImpl(private val retrofitService: RetrofitService)  : AppRepository{
-    override suspend fun getBicingPred() : String {
-        return retrofitService.getGeoJsonFromApi().string()
+    override suspend fun getBicingPred(type: String, time: Int) : String {
+        return retrofitService.getGeoJsonFromApi(type,time).string()
     }
 }
