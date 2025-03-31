@@ -75,8 +75,6 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
                         ).show()
                     }
                 ) {
-                    //missatge per quan no hi ha conexio i no carreguen els endpoints
-                    //fer consultes directamnet a la pgAdmin de les bicis per hora. la mes simple possible. Mirar timesclaedb
                 }
 
             }
