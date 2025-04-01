@@ -52,7 +52,7 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
 
             key(searchType){
                 LaunchedEffect(viewModel.errorMessage) {
-                    delay(2000)
+                    delay(10000)
                     if (viewModel.serverError) {
                         Toast.makeText(
                             context,
