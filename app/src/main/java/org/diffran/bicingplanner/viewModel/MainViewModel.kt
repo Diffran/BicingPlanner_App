@@ -60,14 +60,6 @@ class MainViewModel(private val repository :AppRepository) : ViewModel() {
         )
     }
 
-//    //aixo rep el nom del arxiu guardat i retorna el string del json
-//    fun loadGeoJsonFromAssets(fileName: String): String {
-//        val assetManager: AssetManager = context.assets
-//        val inputStream = assetManager.open(fileName)
-//        val reader = InputStreamReader(inputStream)
-//        return reader.readText()
-//    }
-
     //DEPENDENCY INJECTION
     class AppViewModelFactory(private val repository: AppRepository, ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

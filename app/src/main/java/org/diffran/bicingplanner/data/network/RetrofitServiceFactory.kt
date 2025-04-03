@@ -5,22 +5,25 @@ import okhttp3.OkHttpClient
 import org.diffran.bicingplanner.data.RetrofitService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitServiceFactory {
     private const val API_KEY = "1234"
 
-    fun makeRetrofitService(): RetrofitService {
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val originalRequest = chain.request()
+    fun makeRetrofitService(): RetrofitService {val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(200, TimeUnit.SECONDS)
+        .readTimeout(200, TimeUnit.SECONDS)
+        .writeTimeout(200, TimeUnit.SECONDS)
+        .addInterceptor { chain ->
+            val originalRequest = chain.request()
 
-                val authenticatedRequest = originalRequest.newBuilder()
-                    .addHeader("Authentication", API_KEY)
-                    .build()
+            val authenticatedRequest = originalRequest.newBuilder()
+                .addHeader("Authentication", API_KEY)
+                .build()
 
-                chain.proceed(authenticatedRequest)
-            }
-            .build()
+            chain.proceed(authenticatedRequest)
+        }
+        .build()
 
         return Retrofit.Builder()
             .baseUrl("http://10.7.13.64:8080/api/")

@@ -31,7 +31,6 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
     val unclustered =createUnclusteredLayer()
     val styleBuilder = Style.Builder().fromUri(mapStyle)
 
-    viewModel.getBicingPred(searchType,8)
     val myDataSource = viewModel.getGeoSource(viewModel.dataBicing)
 
     val cameraPosition = rememberSaveable {
@@ -48,35 +47,38 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ){
-            changeCircleColor(unclustered, searchType)
+            if(myDataSource == null ){
 
-            key(searchType){
-                LaunchedEffect(viewModel.errorMessage) {
-                    delay(10000)
-                    if (viewModel.serverError) {
-                        Toast.makeText(
-                            context,
-                            "Server Error",
-                            Toast.LENGTH_LONG
-                        ).show()
+            }else{
+                changeCircleColor(unclustered, searchType)
+
+                key(searchType){
+                    LaunchedEffect(viewModel.errorMessage) {
+                        delay(10000)
+                        if (viewModel.serverError) {
+                            Toast.makeText(
+                                context,
+                                "Server Error",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                    MapLibre(
+                        modifier = Modifier.fillMaxSize(),
+                        styleBuilder = styleBuilder,
+                        cameraPosition = cameraPosition.value,
+                        sources = listOf(myDataSource),
+                        layers = listOf(unclustered),
+                        onMapClick = { latLng ->
+                            Toast.makeText(
+                                context,
+                                "Coordenadas: Lat: ${latLng.latitude}, Lng: ${latLng.longitude}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    ) {
                     }
                 }
-                MapLibre(
-                    modifier = Modifier.fillMaxSize(),
-                    styleBuilder = styleBuilder,
-                    cameraPosition = cameraPosition.value,
-                    sources = listOf(myDataSource),
-                    layers = listOf(unclustered),
-                    onMapClick = { latLng ->
-                        Toast.makeText(
-                            context,
-                            "Coordenadas: Lat: ${latLng.latitude}, Lng: ${latLng.longitude}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                ) {
-                }
-
             }
         }
     }
