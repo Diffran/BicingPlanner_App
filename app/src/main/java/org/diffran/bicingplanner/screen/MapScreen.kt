@@ -1,6 +1,7 @@
 package org.diffran.bicingplanner.screen
 
 import android.graphics.Color
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -31,8 +34,9 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
     val unclustered =createUnclusteredLayer()
     val styleBuilder = Style.Builder().fromUri(mapStyle)
 
-    viewModel.getBicingPred(searchType,8)
-    val myDataSource = viewModel.getGeoSource(viewModel.dataBicing)
+    val dataBicing by viewModel.dataBicing.observeAsState("")
+    val myDataSource = viewModel.getGeoSource(dataBicing)
+    Log.d("DATA", "MapScreen: DATABICING -> ${dataBicing.length}")
 
     val cameraPosition = rememberSaveable {
         mutableStateOf(
@@ -50,6 +54,7 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
         ){
             changeCircleColor(unclustered, searchType)
 
+           // Log.d("MAP SCREEN", myDataSource.toString())
             key(searchType){
                 LaunchedEffect(viewModel.errorMessage) {
                     delay(10000)
@@ -76,7 +81,6 @@ fun MapScreen(mapStyle : String, searchType: String, viewModel: MainViewModel, t
                     }
                 ) {
                 }
-
             }
         }
     }

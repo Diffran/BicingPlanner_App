@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -23,8 +24,10 @@ import java.lang.Thread.State
 
 
 class MainViewModel(private val repository :AppRepository) : ViewModel() {
-    var dataBicing by mutableStateOf("")
-        private set
+//    //var dataBicing by mutableStateOf("")
+//        private set
+    private val _dataBicing = MutableLiveData<String>()
+    val dataBicing: LiveData<String> get() = _dataBicing
     val errorMessage = mutableStateOf<String?>(null)
     var serverError = false
 
@@ -37,10 +40,11 @@ class MainViewModel(private val repository :AppRepository) : ViewModel() {
         viewModelScope.launch {
             try{
                 var result :String = repository.getBicingPred(type,hour)
-                dataBicing = result.replace("\n","")
+                _dataBicing.value = result.replace("\n","")
                 serverError = false
 
                 Log.d("BICING API", "dataBicing correcta")
+                Log.d("BICING API", "TAMANY STRING REBUT -> " + dataBicing.toString().length)
             }catch(e : IOException){
                 errorMessage.value = "Error al obtener los datos: ${e.message}"
                 Log.e("BICING API", "Error al obtener los datos: ${e.message}")
@@ -59,14 +63,6 @@ class MainViewModel(private val repository :AppRepository) : ViewModel() {
                 .withClusterRadius(50)
         )
     }
-
-//    //aixo rep el nom del arxiu guardat i retorna el string del json
-//    fun loadGeoJsonFromAssets(fileName: String): String {
-//        val assetManager: AssetManager = context.assets
-//        val inputStream = assetManager.open(fileName)
-//        val reader = InputStreamReader(inputStream)
-//        return reader.readText()
-//    }
 
     //DEPENDENCY INJECTION
     class AppViewModelFactory(private val repository: AppRepository, ) : ViewModelProvider.Factory {
